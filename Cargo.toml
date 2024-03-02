@@ -1,0 +1,11 @@
+[package]
+name = "envizor"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+
+[profile.release]
+lto = "thin"
+opt-level = "z"
+panic = "abort"
+strip = true
