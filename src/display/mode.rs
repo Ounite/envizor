@@ -56,8 +56,8 @@ pub const GRAPHICS_COLOR8_320X200: VideoMode = VideoMode::Defined { identifier: 
 pub static mut CURRENT: Option<u8> = None;
 
 
-pub fn set(mode: impl Into<VideoMode>) {
-    let ident = match mode.into() {
+pub fn set(mode: VideoMode) {
+    let ident = match mode {
         VideoMode::Other(identifier) => identifier,
         VideoMode::Defined { identifier, .. } => identifier,
     };

@@ -5,3 +5,10 @@ version = 3
 [[package]]
 name = "envizor"
 version = "0.1.0"
+dependencies = [
+ "sulphur-fs",
+]
+
+[[package]]
+name = "sulphur-fs"
+version = "0.1.0"
