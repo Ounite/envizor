@@ -14,6 +14,7 @@ mod mbr;
 mod mm;
 mod port;
 mod reg;
+mod externs;
 
 use display::text;
 use crate::mbr::MbrRecord;
