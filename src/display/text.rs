@@ -34,26 +34,23 @@ pub fn print_newline() {
 }
 
 
-pub fn print_u16(mut n: u16) {
-    // TODO size-optimize following same logic as in boot
+pub fn print_u16(n: u16) {
     if n == 0 {
         print_char(ascii::Char::Digit0);
     };
-
-    let mut buffer = <[ascii::Char; 5]>::default();
-
-    let mut n_l = 0;
-    for i in 0..=5 {
-        if n == 0 {
-            n_l = i;
-            break;
+    
+    let mut passed_zeroes = false;
+    let mut coef = 10000;
+    while coef != 0 {
+        let digit = (n / coef % 10) as u8;
+        coef /= 10;
+        
+        if digit == 0 && !passed_zeroes {
+            continue;
         };
-     
-        buffer[i] = ascii::Char::digit((n % 10) as u8).unwrap();
-        n /= 10;
-    };
-
-    for i in (0..5).rev().skip(5-n_l).take(n_l) {
-        print_char(buffer[i]);
+        
+        passed_zeroes = true;
+        
+        print_char(ascii::Char::digit(digit).unwrap());
     };
 }
