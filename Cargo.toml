@@ -5,7 +5,7 @@ edition = "2021"
 build = "build.rs"
 
 [dependencies]
-sulphur-fs = { path = "../sulphur-fs" }
+sulphur-fs = { git = "https://github.com/Ounite/sulphur-fs.git" }
 
 [profile.release]
 lto = true

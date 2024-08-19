@@ -12,3 +12,4 @@ dependencies = [
 [[package]]
 name = "sulphur-fs"
 version = "0.1.0"
+source = "git+https://github.com/Ounite/sulphur-fs.git#a9d5d4529ef01abbb4f243ed352af14c7de56fa3"
