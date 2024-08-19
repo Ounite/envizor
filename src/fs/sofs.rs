@@ -25,6 +25,6 @@ impl drive::Drive for SOFSDrive {
     }
 
     fn write(&self, addr: u32, data: &[u8; 512]) -> drive::DErr<()> {
-        todo!()
+        unimplemented!()
     }
 } 
