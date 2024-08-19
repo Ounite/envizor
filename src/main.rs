@@ -35,7 +35,10 @@ pub extern "C" fn main(boot_disk_id: u8, mbr_record: &MbrRecord) -> ! {
     text::print_string("enabled\r\n");
     
     text::print_string("finding bial partition... ");
-    let (part_index, part) = mbr_record.partitions.iter().enumerate().find(|(_, part)| part.sys_id == 0x3b).unwrap_or_else(|| control::abort("bial partition was not found"));
+    
+    let (part_index, part) = mbr_record.partitions.iter().enumerate().find(|(_, part)| part.sys_id == 0x3b)
+        .unwrap_or_else(|| control::abort("bial partition was not found"));
+    
     text::print_string("found - #");
     text::print_u16(part_index as u16);
     text::print_newline();
@@ -46,24 +49,23 @@ pub extern "C" fn main(boot_disk_id: u8, mbr_record: &MbrRecord) -> ! {
     let fs = sulphur_fs::SulphurFS::new(&drive, part.start_lba_addr, part.blocks_count).unwrap_or_else(|_| control::abort("failed to initialise fs driver for bial partition"));
     
     let mut buffer = [0x00; 4096];
-    if fs.get_meta().expect("getting fs meta").cluster_size != 8 {
+    if fs.get_meta().expect("fs is already intialised").cluster_size != 8 {
         control::abort("unsupported cluster size in bial partition")
     };
     
-    let root_dir = fs.get_root_dir().expect("getting root dir");
+    let root_dir = fs.get_root_dir().unwrap();
     
-    match root_dir.find_file(&mut buffer, "kernel.px").expect("searching kernel file") {
+    match root_dir.find_file(&mut buffer, "kernel.px").unwrap() {
+        None => control::abort("kernel was not found"),
         Some(file) => {
             file.read(&mut buffer, unsafe { core::slice::from_raw_parts_mut(KERNEL_ADDR as *mut _, file.size() as usize) })
                 .unwrap_or_else(|_| control::abort("failed to read kernel file"));
         },
-        None => control::abort("kernel was not found")
     };
 
-    text::print_string("loaded\r\n");
-
-    text::print_string("launching kernel");
+    text::print_string("loaded\r\nlaunching kernel...");
 
     let kernel_main = unsafe { core::mem::transmute::<_, extern "C" fn() -> !>(KERNEL_ADDR) };
+    
     kernel_main()
 }
