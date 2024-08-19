@@ -53,10 +53,9 @@ pub fn read(disk_id: u8, addr: u64, blocks: u16, buffer: &mut [u8]) -> Result<()
     
     unsafe {
         core::arch::asm!(
-            "push si",
-            "mov si, cx",
+            "xchg si, cx",
             "int 0x13",
-            "pop si",
+            "xchg si, cx",
             in("dl") disk_id,
             in("cx") &mut packet as *mut _ as u16,
             in("ah") 0x42_u8
