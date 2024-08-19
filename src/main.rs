@@ -23,7 +23,7 @@ const KERNEL_ADDR: usize = 0x1000000;
 
 
 #[no_mangle]
-extern "C" fn main(boot_disk_id: u8, mbr_record: &MbrRecord) -> ! {
+pub extern "C" fn main(boot_disk_id: u8, mbr_record: &MbrRecord) -> ! {
     display::mode::set(display::mode::TEXT_COLOR4_80X25);
     
     text::print_string("boot disk id: ");
@@ -52,7 +52,7 @@ extern "C" fn main(boot_disk_id: u8, mbr_record: &MbrRecord) -> ! {
     
     let root_dir = fs.get_root_dir().expect("getting root dir");
     
-    match root_dir.find_file(&mut buffer, "kernel.pbx").expect("searching kernel file") {
+    match root_dir.find_file(&mut buffer, "kernel.px").expect("searching kernel file") {
         Some(file) => {
             file.read(&mut buffer, unsafe { core::slice::from_raw_parts_mut(KERNEL_ADDR as *mut _, file.size() as usize) })
                 .unwrap_or_else(|_| control::abort("failed to read kernel file"));
