@@ -51,7 +51,6 @@ pub fn read(disk_id: u8, addr: u64, blocks: u16, buffer: &mut [u8]) -> Result<()
         lba_addr: addr,
     };
     
-    // fixme this generates ~70KiB of instructions
     unsafe {
         core::arch::asm!(
             "push si",
@@ -64,7 +63,7 @@ pub fn read(disk_id: u8, addr: u64, blocks: u16, buffer: &mut [u8]) -> Result<()
         );
     };
 
-    // xxx should it be gathered inside the branch? 
+    // xxx should it be gathered inside the branch?
     let ah_value;
     unsafe {
         core::arch::asm!(
